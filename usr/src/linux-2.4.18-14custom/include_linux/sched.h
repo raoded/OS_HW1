@@ -147,15 +147,6 @@ struct forbidden_activity_info{
 	int proc_level;
 	int time;
 };
-
-//(int,int,int)
-#define make_forbid(syscall_req_level, proc_level, time) {(syscall_req_level), (proc_level), (time)}
-
-static inline void add_to_queue(task_t* task, struct forbidden_activity_info new_activity) {
-	if((task)->forbidden_max_size != (task)->forbidden_next_index) {
-		(task)->forbidden_queue[((task)->forbidden_next_index)++] = (new_activity);
-	}
-}
 /* hw1 changes end*/
 
 extern void sched_init(void);
@@ -1025,6 +1016,17 @@ static inline int need_resched(void)
 {
 	return unlikely(current->need_resched);
 }
+
+//hw1 start
+//(int,int,int)
+#define make_forbid(syscall_req_level, proc_level, time) {(syscall_req_level), (proc_level), (time)}
+
+static inline void add_to_queue(task_t* task, struct forbidden_activity_info new_activity) {
+	if((task)->forbidden_max_size != (task)->forbidden_next_index) {
+		(task)->forbidden_queue[((task)->forbidden_next_index)++] = (new_activity);
+	}
+}
+//hw1 end
 
 #endif /* __KERNEL__ */
 

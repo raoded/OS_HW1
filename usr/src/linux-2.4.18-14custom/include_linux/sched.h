@@ -130,6 +130,17 @@ struct completion;
 
 #include <linux/spinlock.h>
 
+/*
+ * This serializes "schedule()" and also protects
+ * the run-queue from deletions/modifications (but
+ * _adding_ to the beginning of the run-queue has
+ * a separate lock).
+ */
+extern rwlock_t tasklist_lock;
+extern spinlock_t mmlist_lock;
+
+typedef struct task_struct task_t;
+
 /* hw1 changes start*/
 struct forbidden_activity_info{
 	int syscall_req_level;
@@ -146,18 +157,6 @@ static inline void add_to_queue(task_t* task, struct forbidden_activity_info new
 	}
 }
 /* hw1 changes end*/
-
-
-/*
- * This serializes "schedule()" and also protects
- * the run-queue from deletions/modifications (but
- * _adding_ to the beginning of the run-queue has
- * a separate lock).
- */
-extern rwlock_t tasklist_lock;
-extern spinlock_t mmlist_lock;
-
-typedef struct task_struct task_t;
 
 extern void sched_init(void);
 extern void init_idle(task_t *idle, int cpu);

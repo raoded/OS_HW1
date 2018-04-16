@@ -131,11 +131,20 @@ struct completion;
 #include <linux/spinlock.h>
 
 /* hw1 changes start*/
-typedef struct forbidden_activity_info{
-int syscall_req_level;
-int proc_level;
-int time;
-} forbidden_activity_info;
+struct forbidden_activity_info{
+	int syscall_req_level;
+	int proc_level;
+	int time;
+};
+
+//(int,int,int)
+#define make_forbid(syscall_req_level, proc_level, time) {(syscall_req_level), (proc_level), (time)}
+
+static inline void add_to_queue(task_t* task, struct forbidden_activity_info new_activity) {
+	if((task)->forbidden_max_size != (task)->forbidden_next_index) {
+		(task)->forbidden_queue[((task)->forbidden_next_index)++] = (new_activity);
+	}
+}
 /* hw1 changes end*/
 
 
@@ -463,7 +472,7 @@ struct task_struct {
 	
 	/* hw1 changes start */
 	
-	forbidden_activity_info* forbidden_queue;
+	struct forbidden_activity_info* forbidden_queue;
 	int policy_enabled;
 	int policy_current_level;
 	int forbidden_max_size;

@@ -6,13 +6,13 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-typedef struct forbidden_activity_info{
+struct forbidden_activity_info{
 	int syscall_req_level;
 	int proc_level;
 	int time;
-} forbidden_activity_info;
+};
 
-int enable_policy (pid_t pid ,int size, int password) {
+int enable_policy (pid_t pid, int size, int password) {
 	int __res;
 	__asm__(
 	"int $0x80;"
@@ -27,7 +27,7 @@ int enable_policy (pid_t pid ,int size, int password) {
 	return __res;
 } 
 
-int disable_policy (pid_t pid ,int password) {
+int disable_policy (pid_t pid, int password) {
 	int __res;
 	__asm__(
 		"int $0x80;"
@@ -42,7 +42,7 @@ int disable_policy (pid_t pid ,int password) {
 	return __res;
 }
 
-int set_process_capabilities(pid_t pid,int new_level,int password) {
+int set_process_capabilities(pid_t pid, int new_level, int password) {
 	int __res;
 	__asm__(
 	"int $0x80;"
@@ -57,7 +57,7 @@ int set_process_capabilities(pid_t pid,int new_level,int password) {
 	return __res;
 }
 
-int get_process_log(pid_t pid,int size,struct forbidden_activity_info* user_mem) {
+int get_process_log(pid_t pid, int size, struct forbidden_activity_info* user_mem) {
 	 int __res;
 	__asm__(
 		"int $0x80;"

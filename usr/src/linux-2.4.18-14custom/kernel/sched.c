@@ -118,6 +118,11 @@
 
 #define BITMAP_SIZE ((((MAX_PRIO+1+7)/8)+sizeof(long)-1)/sizeof(long))
 
+//hw1 start
+#define SCHED_LEVEL 1
+//hw1 end
+
+
 typedef struct runqueue runqueue_t;
 
 struct prio_array {
@@ -1373,10 +1378,8 @@ asmlinkage long sys_sched_yield(void)
 {
 	//hw1 start
 	//task_t* found_task=find_task_by_pid(pid);
-	
-	if(current->policy_enabled && current->policy_current_level<1){
-		struct forbidden_activity_info activity = make_forbid(1, current->policy_current_level,
-																jiffies);
+	if(current->policy_enabled && current->policy_current_level < SCHED_LEVEL){
+		struct forbidden_activity_info activity = make_forbid(SCHED_LEVEL, current->policy_current_level, jiffies);
 		add_to_queue(current, activity);
 		return -EINVAL;
 	}
